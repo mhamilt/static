@@ -29,7 +29,7 @@ float random (vec2 st)
 const float maxz = 1.0/50.0;
 void main( void )
 {
-  vec2 st = floor(gl_FragCoord.xy)/resolution.xy;
+  vec2 st = floor(gl_FragCoord.xy * 0.25)/resolution.xy;
   float rnd = random( st);
   gl_FragColor = vec4(vec3(rnd*lfo) + vec3((1.0-lfo)*0.1) ,1.0);
 }
