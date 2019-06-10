@@ -23,13 +23,13 @@ varying vec4 v_color;
 //==============================================================================
 float random (vec2 st)
 {
-  return fract(sin(dot(st.xy, vec2(.8898,78.233))+time) * 43758.5453123);
+  return fract(sin(dot(st.xy, vec2(12.8898,78.233))+time) * 43758.5453123);
 }
 //==============================================================================
 const float maxz = 1.0/50.0;
 void main( void )
 {
-  vec2 st = floor(gl_FragCoord.xy)/resolution.xx;
+  vec2 st = floor(gl_FragCoord.xy)/resolution.xy;
   float rnd = random( st);
   gl_FragColor = vec4(vec3(rnd*lfo) + vec3((1.0-lfo)*0.1) ,1.0);
 }
