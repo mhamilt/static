@@ -1,23 +1,21 @@
-// var screensize
-// if (typeof fullscreenMode != "undefined")
-// {
-//   screensize = ($(window).width() < $(window).height()) ? $(window).width() : $(window).height();
-// }
-// else
-// {
-//   screensize = (2 * $("#sketch-holder").innerWidth()) / 5;
-// }
-//
-// let scale;
 let shdr;
 var lfoHz = 0.1;
 var lfo = 0;
 var radPerFrame = 2 * 3.14159 * lfoHz * 0.03
+var noise;
 //==============================================================================
 preload = function()
 {
   shdr = loadShader('js/shaders/vert.shader', 'js/shaders/frag.shader');
 };
+//==============================================================================
+function mouseClicked()
+{
+  if (getAudioContext().state !== 'running')
+  {
+    getAudioContext().resume();
+  }
+}
 //==============================================================================
 function setup()
 {
@@ -32,12 +30,18 @@ function setup()
   texture(pg);
   shader(shdr);
   shdr.setUniform('resolution',[width,height]);
+
+  noise = new p5.Noise('brown');
+  // noise.amp(0.1);
+  noise.start();
 }
 
 //==============================================================================
 function draw()
 {
-  shdr.setUniform('lfo', ((sin(lfo) + 1) * 0.5));
+  let lfoVal = ((sin(lfo) + 1) * 0.5);
+  noise.amp(lfoVal);
+  shdr.setUniform('lfo', lfoVal);
   lfo += radPerFrame;
   shdr.setUniform('time',millis()*0.001);
   push();
