@@ -8,21 +8,7 @@ preload = function()
 {
   shdr = loadShader('js/shaders/vert.shader', 'js/shaders/frag.shader');
 };
-//==============================================================================
-function mouseClicked()
-{
-  if (getAudioContext().state !== 'running')
-  {
-    getAudioContext().resume();
-  }
-}
-function touchStarted()
-{
-  if (getAudioContext().state !== 'running')
-  {
-    getAudioContext().resume();
-  }
-}
+
 //==============================================================================
 function setup()
 {
@@ -66,5 +52,19 @@ function windowResized()
 {
   resizeCanvas($(window).width(), $(window).height());
 }
-
+//==============================================================================
+function mouseClicked()
+{
+  if (getAudioContext().state !== 'running')
+  {
+    getAudioContext().resume();
+  }
+}
+function touchStarted()
+{
+  if (getAudioContext().state !== 'running')
+  {
+    getAudioContext().resume();
+  }
+}
 //==============================================================================
