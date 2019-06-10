@@ -16,6 +16,13 @@ function mouseClicked()
     getAudioContext().resume();
   }
 }
+function touchStarted()
+{
+  if (getAudioContext().state !== 'running')
+  {
+    getAudioContext().resume();
+  }
+}
 //==============================================================================
 function setup()
 {
