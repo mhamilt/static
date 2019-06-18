@@ -1,6 +1,6 @@
 #ifdef GL_ES
-precision mediump float;
-precision mediump int;
+precision lowp float;
+precision lowp int;
 #endif
 //------------------------------------------------------------------------------
 uniform sampler2D texture;
@@ -11,6 +11,7 @@ varying vec2 vTexCoord;
 //------------------------------------------------------------------------------
 uniform vec2 resolution;
 //------------------------------------------------------------------------------
+uniform float time;
 uniform int horizontalPass; // 0 or 1 to indicate vertical or horizontal pass
 uniform float sigma;
 // The sigma value for the gaussian function: higher value means more
@@ -23,6 +24,7 @@ const float numBlurPixelsPerSide = 10.0;
 //------------------------------------------------------------------------------
 void main()
 {
+  float blurSigma = sigma * time;
   //----------------------------------------------------------------------------
   vec2 var_vertTexCoord = vTexCoord;
   vec2 uv = vTexCoord;
@@ -34,8 +36,8 @@ void main()
   vec2 blurMultiplyVec = 0 < horizontalPass ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
   // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
   vec3 incrementalGaussian;
-  incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
-  incrementalGaussian.y = exp(-0.5 / (sigma * sigma));
+  incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * blurSigma);
+  incrementalGaussian.y = exp(-0.5 / (blurSigma * blurSigma));
   incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
   //----------------------------------------------------------------------------
   vec4 avgValue = vec4(0.0, 0.0, 0.0, 0.0);
@@ -56,6 +58,7 @@ void main()
     incrementalGaussian.xy *= incrementalGaussian.yz;
   }
   //----------------------------------------------------------------------------
+
   gl_FragColor = avgValue / coefficientSum;
 }
 //------------------------------------------------------------------------------

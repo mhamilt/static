@@ -18,11 +18,11 @@ function setup()
   canvas.parent('sketch-holder');
   noStroke();
   //----------------------------------------------------------------------------
-  createMessage();
+  // createMessage();
   //----------------------------------------------------------------------------
   noise = createGraphics(width, height, WEBGL);
-  pass1.noStroke();
-  pass1.shader(noiseShader);
+  noise.noStroke();
+  noise.shader(noiseShader);
   //----------------------------------------------------------------------------
   pass1 = createGraphics(width, height, WEBGL);
   pass1.noStroke();
@@ -34,16 +34,25 @@ function setup()
   //----------------------------------------------------------------------------
   setupBlur(blurH, 0);
   setupBlur(blurV, 1);
+
+  // noiseShader.setUniform('lfo', 10.0);
+  noiseShader.setUniform('resolution', [width, height]);
+  noise.rect(0, 0, width, height);
 }
 //==============================================================================
 function draw()
 {
+  noise.shader(noiseShader);
+  noiseShader.setUniform('time', millis() / 1000.);
+  noise.rect(0, 0, width, height);
   //----------------------------------------------------------------------------
-  makePass(pass1, blurH, message, 0);
+  makePass(pass1, blurH, noise, 0);
   makePass(pass2, blurV, pass1, 1);
   //----------------------------------------------------------------------------
-  image(pass2, 0, 0, width, height);
-  image(message, 0, 0, width, height);
+  // tint(255, 255); // Display at half opacity
+  // noTint();
+  image(noise, 0, 0);
+  image(pass2, 0, 0);
   //----------------------------------------------------------------------------
 }
 //==============================================================================
@@ -55,9 +64,8 @@ function windowResized()
 //==============================================================================
 function makePass(pg, shader, texture, direction)
 {
-  pg.shader(shader);
+  // pg.shader(shader);
   shader.setUniform('texture', texture);
-
   pg.rect(0, 0, width, height);
 }
 //==============================================================================
@@ -72,7 +80,7 @@ function createMessage()
 //==============================================================================
 function setupBlur(blurShader, direction)
 {
-  blurShader.setUniform('sigma', 10.0);
+  blurShader.setUniform('sigma', 20.0);
   blurShader.setUniform('horizontalPass', direction);
   blurShader.setUniform('resolution', [width, height]);
 }
